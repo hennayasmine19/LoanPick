@@ -86,10 +86,10 @@ export default function ChatPage() {
           </div>
 
           <div className="flex flex-col lg:grid lg:grid-cols-3 gap-6 lg:gap-8">
-            <div className="lg:col-span-2 order-1">
+            <div className="lg:col-span-2 order-1 w-full">
               <ChatInterface ref={chatInputRef} />
             </div>
-            <aside className="lg:col-span-1 order-2">
+            <aside className="lg:col-span-1 order-2 w-full">
               <ChatSuggestions onSuggestionClick={handleSuggestionClick} />
             </aside>
           </div>

@@ -40,10 +40,10 @@ export default function ProductsPage() {
           </div>
 
           <div className="flex flex-col lg:grid lg:grid-cols-4 gap-6 lg:gap-8">
-            <aside className="lg:col-span-1 order-2 lg:order-1">
+            <aside className="lg:col-span-1 order-1">
               <ProductFilters onFilterChange={setFilters} />
             </aside>
-            <div className="lg:col-span-3 order-1 lg:order-2">
+            <div className="lg:col-span-3 order-2">
               <ProductsList filters={filters} />
             </div>
           </div>

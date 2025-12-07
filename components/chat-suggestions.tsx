@@ -18,7 +18,7 @@ const suggestions = [
 
 export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
   return (
-    <Card className="border border-slate-200 dark:border-slate-800 shadow-sm sticky top-4">
+    <Card className="border border-slate-200 dark:border-slate-800 shadow-sm sticky top-4 overflow-hidden">
       <CardHeader className="border-b border-slate-200 dark:border-slate-800">
         <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,15 +27,15 @@ export function ChatSuggestions({ onSuggestionClick }: ChatSuggestionsProps) {
           Suggested Questions
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-4 space-y-2">
+      <CardContent className="pt-4 space-y-2 overflow-x-hidden">
         {suggestions.map((suggestion, idx) => (
           <Button
             key={idx}
             variant="outline"
-            className="w-full text-left justify-start h-auto py-3 px-4 text-sm border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
+            className="w-full text-left justify-start h-auto py-3 px-4 text-sm border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600 transition-colors whitespace-normal break-words"
             onClick={() => onSuggestionClick(suggestion)}
           >
-            <span className="text-slate-700 dark:text-slate-300">{suggestion}</span>
+            <span className="text-slate-700 dark:text-slate-300 break-words">{suggestion}</span>
           </Button>
         ))}
       </CardContent>

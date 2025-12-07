@@ -11,28 +11,44 @@ import { ShimmerButton } from "@/components/ui/shimmer-button"
 
 export default function ChatPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
-  const supabase = createClient()
   const chatInputRef = useRef<{ setInput: (value: string) => void }>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (!user) {
+      try {
+        const supabase = createClient()
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        if (!user) {
+          router.push("/auth/login")
+        } else {
+          setIsAuthenticated(true)
+        }
+      } catch (error) {
+        console.error("Error initializing Supabase:", error)
         router.push("/auth/login")
-      } else {
-        setIsAuthenticated(true)
+      } finally {
+        setIsLoading(false)
       }
     }
     checkAuth()
-  }, [supabase, router])
+  }, [router])
 
   const handleSuggestionClick = (suggestion: string) => {
     if (chatInputRef.current) {
       chatInputRef.current.setInput(suggestion)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
+        <div className="text-slate-600 dark:text-slate-400">Loading...</div>
+      </main>
+    )
   }
 
   if (!isAuthenticated) {

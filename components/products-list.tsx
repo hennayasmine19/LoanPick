@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import useSWR from "swr"
 import { ProductCard } from "./product-card"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -33,29 +32,73 @@ interface ProductsListProps {
   filters: FiltersProps
 }
 
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
-
 export function ProductsList({ filters }: ProductsListProps) {
-  const [queryString, setQueryString] = useState("")
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [products, setProducts] = useState<LoanProduct[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<any>(null)
 
   useEffect(() => {
-    const params = new URLSearchParams()
-    if (filters.bank) params.append("bank", filters.bank)
-    if (filters.minAPR) params.append("minAPR", filters.minAPR)
-    if (filters.maxAPR) params.append("maxAPR", filters.maxAPR)
-    if (filters.minIncome) params.append("minIncome", filters.minIncome)
-    if (filters.minCreditScore) params.append("minCreditScore", filters.minCreditScore)
-    setQueryString(params.toString())
-  }, [filters])
+    let isMounted = true
+    
+    const fetchProducts = async () => {
+      setIsLoading(true)
+      setError(null)
+      
+      try {
+        const params = new URLSearchParams()
+        if (filters.bank && filters.bank !== "all") params.append("bank", filters.bank)
+        if (filters.minAPR) params.append("minAPR", filters.minAPR)
+        if (filters.maxAPR) params.append("maxAPR", filters.maxAPR)
+        if (filters.minIncome) params.append("minIncome", filters.minIncome)
+        if (filters.minCreditScore) params.append("minCreditScore", filters.minCreditScore)
+        
+        const query = params.toString()
+        const url = query ? `/api/products?${query}` : "/api/products"
+        
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 10000)
+        
+        const res = await fetch(url, { 
+          signal: controller.signal,
+          cache: 'no-store' // Ensure fresh data
+        })
+        clearTimeout(timeoutId)
+        
+        if (!isMounted) return
+        
+        if (!res.ok) {
+          if (res.status === 401) {
+            window.location.href = "/auth/login"
+            return
+          }
+          throw new Error(`Failed to fetch: ${res.status}`)
+        }
+        
+        const data = await res.json()
+        if (isMounted) {
+          setProducts(data || [])
+        }
+      } catch (err: any) {
+        if (!isMounted) return
+        
+        if (err.name !== "AbortError") {
+          console.error("Failed to fetch products:", err)
+          setError(err)
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
 
-  const {
-    data: products,
-    isLoading,
-    error,
-  } = useSWR<LoanProduct[]>(queryString ? `/api/products?${queryString}` : "/api/products", fetcher, {
-    revalidateOnFocus: false,
-  })
+    // Fetch immediately but don't block page rendering
+    fetchProducts()
+
+    return () => {
+      isMounted = false
+    }
+  }, [filters])
 
   if (isLoading) {
     return (
@@ -91,17 +134,8 @@ export function ProductsList({ filters }: ProductsListProps) {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {products.map((product, index) => (
-              <div
-                key={product.id}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                className={`transition-all duration-300 ease-out ${
-                  hoveredIndex !== null && hoveredIndex !== index ? "blur-sm scale-[0.98] opacity-75" : ""
-                }`}
-              >
-                <ProductCard product={product} />
-              </div>
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
         </>

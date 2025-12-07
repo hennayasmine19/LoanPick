@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { StarsBackground } from "@/components/ui/stars-background"
 import { ShootingStars } from "@/components/ui/shooting-stars"
 
-export default function ProfilePage() {
+const ProfilePage = () => {
   const supabase = createClient()
   const router = useRouter()
   const [email, setEmail] = useState("")
@@ -107,16 +107,16 @@ export default function ProfilePage() {
         <div className="container mx-auto px-4 py-8 relative z-10">
           <div className="max-w-3xl mx-auto">
             {/* Header Section */}
-            <div className="mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+            <div className="mb-6 md:mb-8">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                 Profile Settings
               </h1>
-              <p className="text-slate-600 dark:text-slate-400">
+              <p className="text-sm md:text-base text-slate-600 dark:text-slate-400">
                 Update your information to get personalized loan recommendations
               </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="flex flex-col md:grid md:grid-cols-3 gap-6">
               {/* Main Form Card */}
               <div className="md:col-span-2">
                 <Card className="border border-slate-200 dark:border-slate-800 shadow-sm">
@@ -319,3 +319,5 @@ export default function ProfilePage() {
     </>
   )
 }
+
+export default ProfilePage

@@ -34,13 +34,13 @@ export default async function DashboardPage() {
       <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Header Section with Stats */}
-          <div className="mb-10">
-            <div className="flex items-start justify-between mb-6">
-              <div>
-                <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-3">
+          <div className="mb-6 md:mb-10">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 md:gap-0 mb-4 md:mb-6">
+              <div className="flex-1">
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-2 md:mb-3">
                   Welcome back, {user.email?.split("@")[0]}
                 </h1>
-                <p className="text-lg text-slate-600 dark:text-slate-400">
+                <p className="text-sm md:text-lg text-slate-600 dark:text-slate-400">
                   Discover personalized loan products tailored for you
                 </p>
               </div>

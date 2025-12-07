@@ -36,7 +36,6 @@ export function DashboardProducts() {
   const [bestMatch, setBestMatch] = useState<LoanProduct | null>(null)
   const [top5Products, setTop5Products] = useState<LoanProduct[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -98,14 +97,14 @@ export function DashboardProducts() {
     <div className="space-y-12">
       {/* Best Match Card */}
       {bestMatch && (
-        <section className="space-y-6">
-          <div className="flex items-center gap-4">
+        <section className="space-y-4 md:space-y-6">
+          <div className="flex items-center gap-2 md:gap-4">
             <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800"></div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <span className="text-xl">⭐</span>
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                <span className="text-lg md:text-xl">⭐</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100">
                 Best Match for You
               </h2>
             </div>
@@ -121,13 +120,13 @@ export function DashboardProducts() {
 
       {/* Top 5 Products */}
       {top5Products.length > 0 && (
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
+        <section className="space-y-4 md:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">
+              <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-1">
                 Top Loan Products
               </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400">
+              <p className="text-xs md:text-sm text-slate-600 dark:text-slate-400">
                 Explore our curated selection of top-rated loan products
               </p>
             </div>
@@ -142,17 +141,8 @@ export function DashboardProducts() {
             </Link>
           </div>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {top5Products.map((product, index) => (
-              <div
-                key={product.id}
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                className={`transition-all duration-300 ease-out ${
-                  hoveredIndex !== null && hoveredIndex !== index ? "blur-sm scale-[0.98] opacity-75" : ""
-                }`}
-              >
-                <EnhancedProductCard product={product} />
-              </div>
+            {top5Products.map((product) => (
+              <EnhancedProductCard key={product.id} product={product} />
             ))}
           </div>
           <div className="flex justify-center sm:hidden pt-2">

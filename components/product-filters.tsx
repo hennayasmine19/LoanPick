@@ -1,10 +1,17 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface FilterProps {
   onFilterChange: (filters: {
@@ -17,15 +24,34 @@ interface FilterProps {
 }
 
 export function ProductFilters({ onFilterChange }: FilterProps) {
-  const [bank, setBank] = useState("")
+  const [bank, setBank] = useState("all")
   const [minAPR, setMinAPR] = useState("")
   const [maxAPR, setMaxAPR] = useState("")
   const [minIncome, setMinIncome] = useState("")
   const [minCreditScore, setMinCreditScore] = useState("")
+  const [banks, setBanks] = useState<string[]>([])
+  const [isLoadingBanks, setIsLoadingBanks] = useState(true)
+
+  useEffect(() => {
+    const fetchBanks = async () => {
+      try {
+        const response = await fetch("/api/products/banks")
+        if (response.ok) {
+          const data = await response.json()
+          setBanks(data)
+        }
+      } catch (error) {
+        console.error("Failed to fetch banks:", error)
+      } finally {
+        setIsLoadingBanks(false)
+      }
+    }
+    fetchBanks()
+  }, [])
 
   const handleApplyFilters = () => {
     onFilterChange({
-      bank: bank || undefined,
+      bank: bank && bank !== "all" ? bank : undefined,
       minAPR: minAPR || undefined,
       maxAPR: maxAPR || undefined,
       minIncome: minIncome || undefined,
@@ -34,7 +60,7 @@ export function ProductFilters({ onFilterChange }: FilterProps) {
   }
 
   const handleReset = () => {
-    setBank("")
+    setBank("all")
     setMinAPR("")
     setMaxAPR("")
     setMinIncome("")
@@ -43,7 +69,7 @@ export function ProductFilters({ onFilterChange }: FilterProps) {
   }
 
   return (
-    <Card className="border border-slate-200 dark:border-slate-800 shadow-sm sticky top-4">
+    <Card className="border border-slate-200 dark:border-slate-800 shadow-sm md:sticky md:top-4">
       <CardHeader className="border-b border-slate-200 dark:border-slate-800">
         <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
           <svg className="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,13 +83,22 @@ export function ProductFilters({ onFilterChange }: FilterProps) {
           <Label htmlFor="bank" className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 block">
             Bank Name
           </Label>
-          <Input
-            id="bank"
-            placeholder="Search bank..."
-            value={bank}
-            onChange={(e) => setBank(e.target.value)}
-            className="border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500"
-          />
+          <Select value={bank || "all"} onValueChange={setBank}>
+            <SelectTrigger
+              id="bank"
+              className="w-full border-slate-200 dark:border-slate-700 focus:border-slate-400 dark:focus:border-slate-500"
+            >
+              <SelectValue placeholder={isLoadingBanks ? "Loading banks..." : "Select a bank"} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Banks</SelectItem>
+              {banks.map((bankName) => (
+                <SelectItem key={bankName} value={bankName}>
+                  {bankName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="grid grid-cols-2 gap-3">

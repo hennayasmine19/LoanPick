@@ -32,6 +32,13 @@ export default function LoginPage() {
         password,
       })
       if (error) throw error
+      
+      // Refresh router to sync server components with new session
+      router.refresh()
+      
+      // Small delay to ensure cookies are set
+      await new Promise((resolve) => setTimeout(resolve, 100))
+      
       router.push("/dashboard")
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")

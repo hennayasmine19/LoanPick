@@ -398,7 +398,6 @@ for (const model of modelsToTry) {
 
 ### User Interface
 - 🎨 Modern, animated UI with Framer Motion
-- 🌓 Dark mode support
 - 📱 Fully responsive design
 - ✨ Interactive effects (ripples, particles, meteors, shooting stars)
 - 🎯 Focus cards with hover effects
@@ -414,7 +413,6 @@ for (const model of modelsToTry) {
 ### AI Chat Assistant
 - 💬 Context-aware chat (single product or general)
 - 🎯 Grounded responses (no hallucinations)
-- 📝 Chat history persistence
 - 🔄 Model fallback strategy
 - ⚡ Fast response times
 
@@ -460,7 +458,4 @@ This project is private and proprietary.
 
 ---
 
-## 🤝 Contributing
-
-This is a private project. For questions or issues, please contact the development team.
 
